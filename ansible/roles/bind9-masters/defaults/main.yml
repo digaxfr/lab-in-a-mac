@@ -1,0 +1,5 @@
+---
+named_packages:
+- bind9
+- bind9utils
+- dnsutils

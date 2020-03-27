@@ -1,0 +1,26 @@
+;; Ansible Managed
+
+@   IN  SOA ns1.{{ domain_name }}. root.{{ domain_name }}. (
+    {{ ansible_date_time.epoch }} ; Serial
+    60 ; Refresh
+    30 ; Retry
+    120 ; Expire
+    10 ; TTL
+)
+
+; NS
+{% for host in groups.dns_masters %}
+@   IN  NS  ns{{ loop.index }}.{{ domain_name }}.
+{% endfor %}
+
+; NS glue records
+{% for host in groups.dns_masters %}
+ns1.{{ domain_name }}.  IN  A   {{ hostvars[host].nics[0].ipv4_address }}
+{% endfor %}
+
+; A records
+{% for host in groups.all %}
+{% if hostvars[host].nics[0].ipv4_address is defined %}
+{{ host }}. IN A {{ hostvars[host].nics[0].ipv4_address }}
+{% endif %}
+{% endfor %}

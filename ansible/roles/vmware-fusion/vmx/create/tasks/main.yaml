@@ -1,0 +1,23 @@
+---
+- name: vmware-fusion/vm/create | check to see if vmx exists
+  stat:
+    path: '{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/vm.vmx'
+  register: _vmx_stat
+
+- name: vmware-fusion/vm/create | create vm template
+  include_tasks: template.yaml
+  when:
+  - _vmx_stat.stat.exists == False
+  - vm_type == 'template'
+
+- name: vmware-fusion/vm/create | create vm
+  include_tasks: vm.yaml
+  when:
+  - _vmx_stat.stat.exists == False
+  - vm_type == 'vm'
+
+- name: vmware-fusion/vm/create | create esxi
+  include_tasks: esxi.yaml
+  when:
+  - _vmx_stat.stat.exists == False
+  - vm_type == 'esxi'

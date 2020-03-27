@@ -1,0 +1,22 @@
+---
+- hosts: rack_routers
+  become: no
+  gather_facts: no
+  serial: 1
+  roles:
+  - role: vmware-fusion/vmx/power-off
+    delegate_to: '{{ groups.vmware_fusion_host[0] }}'
+  - role: vmware-fusion/vmx/delete
+    delegate_to: '{{ groups.vmware_fusion_host[0] }}'
+  - role: vmware-fusion/vmx/create
+    delegate_to: '{{ groups.vmware_fusion_host[0] }}'
+  - role: vmware-fusion/vmx/power-on
+    delegate_to: '{{ groups.vmware_fusion_host[0] }}'
+
+- hosts: rack_routers
+  become: no
+  gather_facts: no
+  roles:
+  - wait-for-ssh
+
+- import_playbook: configure-rack-routers.yaml

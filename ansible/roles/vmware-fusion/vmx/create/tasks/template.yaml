@@ -1,0 +1,20 @@
+---
+- name: vmware-fusion/vmx/create | make vm directory
+  file:
+    path: '{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm'
+    state: directory
+
+- name: vmware-fusion/vmx/create | create the vmdks
+  command: >
+    '{{ vmware_fusion_bin_dir }}/vmware-vdiskmanager' -c -s {{ item.size }}GB -a lsilogic -t 0
+    '{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/{{ item.name }}.vmdk'
+  with_items: '{{ disks }}'
+
+- name: vmware-fusion/vmx/create | template vmx file
+  template:
+    src: vm.vmx.j2
+    dest: '{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/vm.vmx'
+
+- name: vmware-fusion/vmx/create | manual steps required
+  debug:
+    msg: 'Manual steps are required post-install to copy the base vmdk to the expected templates location!'

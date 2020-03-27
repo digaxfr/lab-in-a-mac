@@ -1,0 +1,15 @@
+---
+- hosts: core_router
+  become: yes
+  gather_facts: yes
+  roles:
+  - role: network-interfaces-static
+    tags: network
+  - role: nftables
+    tags: firewall
+  - role: bind9-masters
+    tags: dns
+  - role: bird2
+    tags: bgp
+  - role: dhcpd
+    tags: dhcpd

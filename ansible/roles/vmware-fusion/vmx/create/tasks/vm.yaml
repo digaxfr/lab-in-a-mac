@@ -1,0 +1,41 @@
+---
+# TODO: Support growing the size of disk0
+
+- name: vmware-fusion/vmx/create | make vm directory
+  file:
+    path: '{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm'
+    state: directory
+
+- name: vmware-fusion/vm/create | template out cloud-init files
+  template:
+    src: '{{ item }}.j2'
+    dest: '{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/{{ item }}'
+  register: _cloud_init_files
+  with_items:
+  - meta-data
+  - user-data
+
+- name: vmware-fusion/vm/create | generate cloud-init iso
+  command: >
+    /Applications/VMware\ Fusion.app/Contents/Library/mkisofs
+    -o "{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/cloud-init.iso"
+    -V cidata -J -r
+    "{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/meta-data"
+    "{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/user-data"
+  when: _cloud_init_files is changed
+
+- name: vmware-fusion/vmx/create | template vmx file
+  template:
+    src: vm.vmx.j2
+    dest: '{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/vm.vmx'
+
+- name: vmware-fusion/vmx/create | copy template disk
+  copy:
+    src: '{{ vmware_fusion_vm_template_disk }}'
+    dest: '{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/sda.vmdk'
+
+- name: vmware-fusion/vmx/create | grow the vmdk size
+  command: >
+    '{{ vmware_fusion_bin_dir }}/vmware-vdiskmanager' -x {{ item.size }}GB
+    '{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/{{ item.name }}.vmdk'
+  with_items: '{{ disks }}'

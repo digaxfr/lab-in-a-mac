@@ -1,0 +1,43 @@
+---
+- name: bind9 | install packages
+  apt:
+    name: "{{ named_packages }}"
+    state: present
+
+- name: bind9 | template out config
+  template:
+    src: named.conf.j2
+    dest: /etc/bind/named.conf
+    owner: root
+    group: bind
+    mode: 0640
+  notify: restart bind9
+
+- name: bind9 | template forward zone files
+  template:
+    src: db-forward.j2
+    dest: "/etc/bind/db.{{ domain_name }}"
+    owner: root
+    group: bind
+    mode: 0640
+  notify: restart bind9
+
+# TODO: Make this support any type of CIDR; assume /24 for now
+- name: bind9 | template reverse zone files
+  template:
+    src: db-reverse.j2
+    dest: "/etc/bind/db.{{ item.value.hostonly_subnet.split('.')[-2] }}.{{ item.value.hostonly_subnet.split('.')[-3] }}.{{ item.value.hostonly_subnet.split('.')[-4] }}.in-addr.arpa"
+    owner: root
+    group: bind
+    mode: 0640
+  with_dict: "{{ vmware_fusion_vmnets }}"
+  notify: restart bind9
+
+- name: bind9 | systemd start and enable
+  systemd:
+    name: bind9
+    state: started
+    enabled: yes
+
+- name: bind9 | flush handlers
+  meta: flush_handlers

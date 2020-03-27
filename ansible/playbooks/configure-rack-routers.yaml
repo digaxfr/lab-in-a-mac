@@ -1,0 +1,20 @@
+---
+- hosts: core_router
+  gather_facts: yes
+  become: yes
+  tasks:
+  - setup:
+    tags: always
+
+- hosts: rack_routers
+  become: yes
+  gather_facts: yes
+  roles:
+  - role: network-interfaces-static
+    tags: network
+  - role: nftables
+    tags: firewall
+  - role: bird2
+    tags: bgp
+  - role: dhcpd-relay
+    tags: dhcpd-relay

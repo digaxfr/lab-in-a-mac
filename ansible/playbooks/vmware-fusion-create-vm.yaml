@@ -1,0 +1,14 @@
+---
+- hosts: '{{ target }}'
+  become: no
+  gather_facts: no
+  roles:
+  - role: vmware-fusion/vmx/create
+    delegate_to: '{{ groups.vmware_fusion_host[0] }}'
+
+- hosts: '{{ target }}'
+  become: yes
+  gather_facts: no
+  roles:
+  - role: vmware-fusion/vmx/dhcp-create
+    delegate_to: '{{ groups.vmware_fusion_host[0] }}'

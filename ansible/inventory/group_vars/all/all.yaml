@@ -1,0 +1,95 @@
+---
+# Ansible
+ansible_python_interpreter: /usr/bin/python3
+
+# Lab environment
+domain_name: lab.dchin.dev
+ntp_servers:
+- time.nist.gov
+
+# Yes, this is not really an OUI because it is only two octects defined. That is because the IP address is converted
+# into hex as the last four octets.
+mac_oui: 1a:b0
+
+# Fusion VM info
+vmware_fusion_vm_dir: '/Users/darrenchin/Virtual Machines.localized'
+vmware_fusion_vm_template_disk: '{{ vmware_fusion_vm_dir }}/Fedora-32-2020-05-18.vmdk'
+vmware_fusion_vm_template_iso: '{{ vmware_fusion_vm_dir }}/Fedora-Server-netinst-x86_64-32-1.6.iso'
+vmware_fusion_bin_dir: '/Applications/VMware Fusion.app/Contents/Library'
+
+# Fusion API configs
+vmware_fusion_api_base_url: /api
+vmware_fusion_api_host: 127.0.0.1
+vmware_fusion_api_port: 8697
+vmware_fusion_api_scheme: http
+vmware_fusion_api_url: >-
+  {{- vmware_fusion_api_scheme -}}://
+  {{- vmware_fusion_api_host -}}:{{- vmware_fusion_api_port -}}
+  {{- vmware_fusion_api_base_url -}}
+
+# Fusion API credentials
+#vmware_fusion_api_user:
+#vmware_fusion_api_password:
+
+# Fusion vmnets
+# The attribute names match VMware vmnet attributes, so some of it may not make any sense.
+vmware_fusion_vmnets:
+  99:
+    cidr: 192.168.99.0/24
+    dhcp: 'yes'
+    display_name: sandbox
+    hostonly_netmask: 255.255.255.0
+    hostonly_subnet: 192.168.99.0
+    mtu: 9000
+    nat: 'yes'
+    virtual_adapter: 'yes'
+  100:
+    cidr: 192.168.100.0/24
+    dhcp: 'no'
+    display_name: lab core
+    hostonly_netmask: 255.255.255.0
+    hostonly_subnet: 192.168.100.0
+    mtu: 9000
+    nat: 'yes'
+    virtual_adapter: 'yes'
+  101:
+    cidr: 192.168.101.0/24
+    dhcp: 'no'
+    display_name: lab rack 1
+    hostonly_netmask: 255.255.255.0
+    hostonly_subnet: 192.168.101.0
+    mtu: 9000
+    nat: 'no'
+    virtual_adapter: 'no'
+  102:
+    cidr: 192.168.102.0/24
+    dhcp: 'no'
+    display_name: lab rack 2
+    hostonly_netmask: 255.255.255.0
+    hostonly_subnet: 192.168.102.0
+    mtu: 9000
+    nat: 'no'
+    virtual_adapter: 'no'
+  103:
+    cidr: 192.168.103.0/24
+    dhcp: 'no'
+    display_name: lab rack 3
+    hostonly_netmask: 255.255.255.0
+    hostonly_subnet: 192.168.103.0
+    mtu: 9000
+    nat: 'no'
+    virtual_adapter: 'no'
+  104:
+    cidr: 192.168.104.0/24
+    dhcp: 'no'
+    display_name: lab rack 4
+    hostonly_netmask: 255.255.255.0
+    hostonly_subnet: 192.168.104.0
+    mtu: 9000
+    nat: 'no'
+    virtual_adapter: 'no'
+
+# ESXi
+esxi_iso: VMware-VMvisor-Installer-7.0.0-15843807.x86_64.iso
+esxi_custom_iso: VMware-VMvisor-Installer-7.0.0-15843807.x86_64-unattended.iso
+esxi_root_password: '{{ esxi_root_password_vaulted }}'

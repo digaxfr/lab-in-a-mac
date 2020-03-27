@@ -1,0 +1,6 @@
+---
+- hosts: dns_masters
+  become: yes
+  gather_facts: yes
+  roles:
+  - bind9-masters

@@ -1,0 +1,91 @@
+# named.conf
+# This is a blend of Debian defaults and customizied configuration merged into one file.
+# Commented sections are carry-over from a former template based on RHEL8.
+
+acl "trusted" {
+    127.0.0.1;
+{% for network_key, network_value in vmware_fusion_vmnets.items() %}
+    {{ network_value.cidr }};
+{% endfor %}
+};
+
+options {
+    listen-on port 53 {
+        127.0.0.1;
+        {{ ansible_default_ipv4.address }};
+    };
+    directory           "/var/cache/bind";
+#    dump-file           "/var/named/data/cache_dump.db";
+#    statistics-file     "/var/named/data/named_stats.txt";
+#    memstatistics-file  "/var/named/data/named_mem_stats.txt";
+#    secroots-file       "/var/named/data/named.secroots";
+#    recursing-file      "/var/named/data/named.recursing";
+
+    allow-query     {
+        trusted;
+    };
+    allow-recursion {
+        trusted;
+    };
+    allow-query-cache {
+        trusted;
+    };
+
+    recursion yes;
+
+    dnssec-enable yes;
+    dnssec-validation yes;
+
+#    managed-keys-directory "/var/named/dynamic";
+
+#    pid-file "/run/named/named.pid";
+#    session-keyfile "/run/named/session.key";
+
+#    include "/etc/crypto-policies/back-ends/bind.config";
+};
+
+logging {
+    channel default_debug {
+        file "named.run";
+            severity dynamic;
+    };
+};
+
+zone "." IN {
+    type hint;
+    file "/usr/share/dns/root.hints";
+};
+
+zone "localhost" {
+    type master;
+    file "/etc/bind/db.local";
+};
+
+zone "127.in-addr.arpa" {
+    type master;
+    file "/etc/bind/db.127";
+};
+
+zone "0.in-addr.arpa" {
+    type master;
+    file "/etc/bind/db.0";
+};
+
+zone "255.in-addr.arpa" {
+    type master;
+    file "/etc/bind/db.255";
+};
+
+zone "{{ domain_name }}." IN {
+    type master;
+    file "/etc/bind/db.{{ domain_name }}";
+};
+
+# TODO: Support CIDRs other than /24; should be a fun weekend project
+{% for network_key, network_value in vmware_fusion_vmnets.items() %}
+{% set network_split = network_value.hostonly_subnet.split('.') %}
+zone "{{ network_split[2] }}.{{ network_split[1] }}.{{ network_split[0] }}.in-addr.arpa" {
+    type master;
+    file "/etc/bind/db.{{ network_split[2] }}.{{ network_split[1] }}.{{ network_split[0] }}.in-addr.arpa";
+};
+{% endfor %}

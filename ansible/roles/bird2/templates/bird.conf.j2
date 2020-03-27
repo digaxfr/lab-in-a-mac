@@ -1,0 +1,75 @@
+# Ansible managed
+# TODO: Learn and use better filters since on some areas we are blindly accepting all.
+# https://gitlab.labs.nic.cz/labs/bird/wikis/BGP_filtering
+
+log syslog all;
+router id {{ ansible_default_ipv4.address }};
+
+# debug protocols all;
+
+watchdog warning 5 s;
+watchdog timeout 30 s;
+
+ipv4 table master4;
+ipv6 table master6;
+
+filter sink { reject; };
+
+protocol device {
+    scan time 10;
+}
+
+protocol direct {
+    ipv4;
+}
+
+protocol kernel {
+    persist;
+    learn;
+    scan time 20;
+    ipv4 {
+        import all;
+        export all;
+    };
+}
+
+protocol kernel {
+    ipv6 { export none; };
+}
+
+{% if 'core_router' in hostvars[inventory_hostname].group_names %}
+# point-to-point links for core router to rack routers
+{% for router in groups.rack_routers %}
+protocol bgp downlink_{{ hostvars[router].nics[0].ipv4_address | replace('.', '_') }} {
+    description "point-to-point {{ hostvars[router].nics[0].ipv4_address }}";
+    local {{ ansible_default_ipv4.address }} as {{ bgp_asn }};
+    neighbor {{ hostvars[router].nics[0].ipv4_address }} as {{ hostvars[router].bgp_asn }};
+
+    ipv4 {
+        export all;
+        import filter {
+            if net = {{ (hostvars[router].nics[1].ipv4_address + '/' + hostvars[router].nics[1].ipv4_netmask) | ipaddr('network/prefix') }} then accept;
+            reject;
+        };
+    };
+}
+{% endfor %}
+{% endif %}
+
+{% if 'rack_routers' in hostvars[inventory_hostname].group_names %}
+# pont-to-point link for rack routers to core router
+protocol bgp uplink_{{ hostvars[groups.core_router[0]].nics[0].ipv4_address | replace('.', '_') }} {
+    description "point-to-point {{ hostvars[groups.core_router[0]].nics[0].ipv4_address }}";
+    local {{ ansible_default_ipv4.address }} as {{ bgp_asn }};
+    neighbor {{ hostvars[groups.core_router[0]].nics[0].ipv4_address }} as {{ hostvars[groups.core_router[0]].bgp_asn }};
+    source address {{ ansible_default_ipv4.address }};
+
+    ipv4 {
+        export filter {
+            if net = {{ (ansible_eth1.ipv4.network + '/' + ansible_eth1.ipv4.netmask )| ipaddr('cidr') }} then accept;
+            reject;
+        };
+        import all;
+    };
+}
+{% endif %}

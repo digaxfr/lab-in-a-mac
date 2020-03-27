@@ -1,0 +1,20 @@
+;; Ansible Managed
+
+@   IN  SOA ns1.{{ domain_name }}. root.{{ domain_name }}. (
+    {{ ansible_date_time.epoch }} ; Serial
+    60 ; Refresh
+    30 ; Retry
+    120 ; Expire
+    10 ; TTL
+)
+
+{% for host in groups.dns_masters %}
+@   IN  NS  ns{{ loop.index }}.{{ domain_name }}.
+{% endfor %}
+
+; PTR records
+{% for host in groups['rack_' + item.key | string] %}
+{% if hostvars[host].nics[0].ipv4_address is defined and ('vmnet' + item.key | string) == hostvars[host].nics[0].vmnet %}
+{{ hostvars[host].nics[0].ipv4_address.split('.')[3] }} IN PTR {{ host }}.
+{% endif %}
+{% endfor %}

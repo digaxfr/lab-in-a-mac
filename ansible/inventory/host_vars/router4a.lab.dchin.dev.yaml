@@ -1,0 +1,47 @@
+---
+vm_type: vm
+
+cpus: 1
+ram: 1024
+nics:
+- name: eth0
+  cloud_init_static: yes
+  ipv4_address: 192.168.100.14
+  ipv4_gateway: 192.168.100.2
+  ipv4_netmask: 255.255.255.0
+  vmnet: vmnet100
+- name: eth1
+  ipv4_address: 192.168.104.1
+  ipv4_netmask: 255.255.255.0
+  vmnet: vmnet104
+disks:
+- name: sda
+  size: 32GB
+
+bgp_asn: 65004
+
+vlans:
+- description: vm traffic
+  interface: eth1.10
+  ipv4_address: 192.168.89.1
+  ipv4_cidr: 192.168.89.0/24
+  ipv4_netmask: 255.255.255.0
+  vlan: 10
+- description: vmotion traffic
+  interface: eth1.11
+  ipv4_address: 192.168.88.1
+  ipv4_cidr: 192.168.88.0/24
+  ipv4_netmask: 255.255.255.0
+  vlan: 11
+- description: vsan traffic
+  interface: eth1.12
+  ipv4_address: 192.168.87.1
+  ipv4_cidr: 192.168.87.0/24
+  ipv4_netmask: 255.255.255.0
+  vlan: 12
+- description: extra1
+  interface: eth1.13
+  ipv4_address: 192.168.86.1
+  ipv4_cidr: 192.168.86.0/24
+  ipv4_netmask: 255.255.255.0
+  vlan: 13

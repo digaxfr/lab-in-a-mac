@@ -1,0 +1,21 @@
+---
+- name: vmware-fusion/vmx/power-off | check if the vmx exists
+  stat:
+    path: '{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/vm.vmx'
+  register: _vmx_stat
+
+- name: vmware-fusion/vmx/power-off | check to see if it is running
+  command: >
+    /Applications/VMware\ Fusion.app/Contents/Public/vmrun list
+  register: _vmx_list
+  when: _vmx_stat.stat.exists
+
+# vmrun stop is not idempotent, so we have to do checks
+- name: vmware-fusion/vmx/power-off | stop the vm
+  command: >
+    /Applications/VMware\ Fusion.app/Contents/Public/vmrun
+    stop
+    '{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/vm.vmx'
+  when:
+  - _vmx_stat.stat.exists
+  - inventory_hostname in _vmx_list.stdout

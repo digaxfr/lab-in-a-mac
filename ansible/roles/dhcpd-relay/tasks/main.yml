@@ -1,0 +1,23 @@
+---
+- name: dhcpd-relay | install the relay server
+  apt:
+    name: isc-dhcp-relay
+    state: present
+
+- name: dhcpd-relay | configure the relay configuration file
+  lineinfile:
+    path: /etc/default/isc-dhcp-relay
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+  with_items:
+  - regexp: '^SERVERS='
+    line: 'SERVERS="{{ hostvars[groups.core_router[0]].ansible_default_ipv4.address }}"'
+  - regexp: '^INTERFACES='
+    line: 'INTERFACES=""'
+  notify: restart isc-dhcp-relay
+
+- name: dhcpd-relay | systemd
+  systemd:
+    name: isc-dhcp-relay
+    state: started
+    enabled: yes

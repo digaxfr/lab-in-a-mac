@@ -1,0 +1,13 @@
+#cloud-config
+preserve_hostname: False
+hostname: {{ inventory_hostname_short }}
+fqdn: {{ inventory_hostname }}
+
+ssh_authorized_keys:
+{% for key in public_ssh_key %}
+- {{ key }}
+{% endfor %}
+
+timezone: UTC
+
+manage_etc_hosts: true

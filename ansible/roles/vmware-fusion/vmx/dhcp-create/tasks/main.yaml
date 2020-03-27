@@ -1,0 +1,17 @@
+---
+- name: vmware-fusion/vmx/dhcp-create | append host entry in dhcpd
+  lineinfile:
+    path: '/Library/Preferences/VMware Fusion/{{ item.vmnet }}/dhcpd.conf'
+    regexp: 'host {{ inventory_hostname }} '
+    line: 'host {{ inventory_hostname }} { hardware ethernet {{ mac_oui }}:{{ item.ipv4_address | ip4_hex(":") }}; fixed-address {{ item.ipv4_address }}; }'
+  with_items: '{{ nics }}'
+  when: 'item.vmnet_static is defined and item.vmnet_static | bool'
+  notify: restart vmnet
+
+# We will only take eth0; maybe future enhancement to support multiple IPs
+- name: vmware-fusion/vmx/dhcp-create | append host entry to /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    regexp: '{{ nics[0].ipv4_address }} '
+    line: '{{ nics[0].ipv4_address }} {{ inventory_hostname }} {{ inventory_hostname_short }}'
+  when: 'nics[0].vmnet_static is defined and nics[0].vmnet_static | bool'

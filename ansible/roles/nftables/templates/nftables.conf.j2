@@ -1,0 +1,51 @@
+#!/usr/sbin/nft -f
+# https://wiki.nftables.org/wiki-nftables/index.php/Quick_reference-nftables_in_10_minutes
+# https://wiki.archlinux.org/index.php/Nftables
+
+flush ruleset
+
+define fusion_subnets = {
+{% for vmnet_k, vmnet_v in vmware_fusion_vmnets.items() %}
+    {{ vmnet_v.cidr }},
+{% endfor %}
+}
+
+table ip filter {
+  chain input {
+    type filter hook input priority 0; policy drop; counter;
+    ct state established,related accept
+    iifname "lo" accept
+    counter icmp type echo-request accept
+    counter tcp dport 22 ip saddr {{ vmware_fusion_vmnets.100.cidr }} accept
+{% if inventory_hostname in groups.core_router %}
+    counter udp dport 53 accept
+    counter tcp dport 53 accept
+    counter udp dport 67 accept
+{% endif %}
+{% if inventory_hostname in groups.all_routers %}
+    counter tcp dport 179 accept
+{% endif %}
+  }
+
+  chain forward {
+    type filter hook forward priority 0; policy drop; counter;
+    # TODO: Is this really a good ide to do ct on the forward chain?
+    ct state established,related accept
+    # TODO: Fine tune this list because we technically do something bad here by allowing IPs that should not exist on
+    # certain subnets (e.g. .101 originating on .102 subnet)
+    counter ip saddr $fusion_subnets accept
+  }
+
+  chain output {
+    type filter hook output priority 0; policy accept; counter;
+  }
+
+  chain prerouting {
+    type nat hook prerouting priority 0;
+  }
+
+  chain postrouting {
+    type nat hook postrouting priority 100;
+    counter oifname eth0 ip daddr != $fusion_subnets masquerade
+  }
+}

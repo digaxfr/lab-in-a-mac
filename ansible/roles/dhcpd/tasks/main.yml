@@ -1,0 +1,35 @@
+---
+- name: dhcpd | install the packages
+  apt:
+    name: isc-dhcp-server
+    state: present
+
+- name: dhcpd | setup debian configurations to listen only on ipv4
+  lineinfile:
+    path: /etc/default/isc-dhcp-server
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+  with_items:
+  - regexp: '^INTERFACESv4='
+    line: 'INTERFACESv4="eth0"'
+  - regexp: '^INTERFACESv6='
+    line: '#INTERFACESv6=""'
+  notify: restart isc-dhcp-server
+
+- name: dhcpd | template out config
+  template:
+    src: dhcpd.conf.j2
+    dest: /etc/dhcp/dhcpd.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart isc-dhcp-server
+
+- name: dhcpd | systemd start and enable
+  systemd:
+    name: isc-dhcp-server
+    state: started
+    enabled: yes
+
+- name: dhcpd | flush handlers
+  meta: flush_handlers

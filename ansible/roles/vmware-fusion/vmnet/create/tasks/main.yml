@@ -1,0 +1,45 @@
+---
+- name: vmware-fusion/vmnet/create | asserts
+  assert:
+    that:
+      - vmware_fusion_vmnets is defined
+
+- name: vmware-vusion/vmnet/create | insert vmnet config
+  include_tasks: insert.yaml
+  vars:
+    _vmnet_name: '{{ item.key }}'
+    _vmnet_dict: '{{ item.value }}'
+  with_dict: '{{ vmware_fusion_vmnets }}'
+
+# API sucks and is buggy; code left in for future use.
+
+# For now, we will always send the create call because the API can handle it. In the future we can enhance teh logic.
+# If vmnet is new:
+#  Response Code: 201
+# If vmnet exists:
+#  Code: 138
+#  Message: Given vmnet already existed
+#  Response Code: 500
+#- name: vmware-fusion/vmnet/create | create the networks
+#  uri:
+#    url: '{{ vmware_fusion_api_url }}/vmnets'
+#    user: '{{ vmware_fusion_api_user }}'
+#    password: '{{ vmware_fusion_api_password }}'
+#    method: post
+#    body: |
+#      {
+#        "name": "{{ item.value.name }}",
+#        "type": "{{ item.value.type }}",
+#        "dchp": "{{ item.value.dhcp }}",
+#        "subnet": "{{ item.value.ip_network }}",
+#        "mask": "{{ item.value.ip_netmask }}"
+#      }
+#    body_format: json
+#    headers:
+#      Accept: application/vnd.vmware.vmw.rest-v1+json
+#      Content-Type: application/vnd.vmware.vmw.rest-v1+json
+#    force_basic_auth: yes
+#    status_code:
+#    - 201
+#    - 500
+#  with_dict: '{{ vmware_fusion_vmnets }}'

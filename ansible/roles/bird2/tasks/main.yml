@@ -1,0 +1,28 @@
+---
+- name: bird2 | install bird
+  apt:
+    name: bird2
+    state: present
+
+- name: bird2 | template bird conf
+  template:
+    src: bird.conf.j2
+    dest: /etc/bird/bird.conf
+    owner: bird
+    group: bird
+    mode: 0640
+  notify: restart bird2
+
+- name: bird2 | sysctl
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+
+- name: bird2 | systemd
+  systemd:
+    name: bird
+    state: started
+    enabled: yes
+
+- name: bird2 | flush handlers
+  meta: flush_handlers

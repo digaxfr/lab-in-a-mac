@@ -1,0 +1,12 @@
+---
+- name: vmware-fusion/vm/delete | check to see if vmx exists
+  stat:
+    path: '{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/vm.vmx'
+  register: _vmx_stat
+
+- name: vmware-fusion/vmx/delete | delete the vm
+  command: >
+    /Applications/VMware\ Fusion.app/Contents/Public/vmrun
+    deleteVM
+    '{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/vm.vmx'
+  when: _vmx_stat.stat.exists

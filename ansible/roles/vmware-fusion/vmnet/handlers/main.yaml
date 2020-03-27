@@ -1,0 +1,8 @@
+---
+- name: restart vmnet
+  command: >
+    /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cli {{ item }}
+  with_items:
+  - --configure
+  - --stop
+  - --start

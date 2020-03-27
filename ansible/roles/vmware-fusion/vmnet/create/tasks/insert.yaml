@@ -1,0 +1,11 @@
+---
+# Why not use vmnet-cfgcli? Cause it sucks. And it is easier to implement with lineinfile.
+- name: vmware-vusion/vmnet/create | insert vmnet config
+  lineinfile:
+    path: /Library/Preferences/VMware Fusion/networking
+    regexp: 'answer VNET_{{ _vmnet_name | upper }}_{{ _vmnet_item.key | upper }} '
+    line: 'answer VNET_{{ _vmnet_name | upper }}_{{ _vmnet_item.key | upper }} {{ _vmnet_item.value }}'
+  with_dict: '{{ _vmnet_dict }}'
+  loop_control:
+    loop_var: _vmnet_item
+  notify: restart vmnet

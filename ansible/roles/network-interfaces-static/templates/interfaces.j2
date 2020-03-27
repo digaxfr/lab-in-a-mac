@@ -1,0 +1,25 @@
+# Ansible managed
+
+auto lo
+iface lo inet loopback
+
+{% for nic in hostvars[inventory_hostname].nics %}
+{% if nic.ipv4_address is defined %}
+auto {{ nic.name }}
+iface {{ nic.name }} inet static
+    address {{ nic.ipv4_address }}
+    netmask {{ nic.ipv4_netmask }}
+{% if nic.ipv4_gateway is defined %}
+    gateway {{ nic.ipv4_gateway }}
+{% endif %}
+{% endif %}
+{% endfor %}
+
+{% if vlans is defined %}
+{% for vlan in vlans %}
+auto {{ vlan.interface }}
+iface {{ vlan.interface }} inet static
+    address {{ vlan.ipv4_address }}
+    netmask {{ vlan.ipv4_netmask }}
+{% endfor %}
+{% endif %}

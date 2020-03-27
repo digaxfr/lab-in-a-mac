@@ -1,0 +1,4 @@
+domain {{ domain_name }}
+nameserver {{ hostvars[groups.core_router[0]].nics[0].ipv4_address }}
+nameserver {{ nameserver_default }}
+options attempts:1

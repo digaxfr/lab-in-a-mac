@@ -1,0 +1,13 @@
+---
+- hosts: esxi
+  become: no
+  gather_facts: no
+  roles:
+  - vsphere/get-host-thumbprint
+#  - vsphere/bootstrap
+
+#- hosts: esxi[0]
+#  become: no
+#  gather_facts: no
+#  roles:
+#  - vsphere/vsan-create

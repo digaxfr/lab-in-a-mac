@@ -1,0 +1,13 @@
+---
+vm_type: vm
+
+cpus: 4
+ram: 16384
+nics:
+- name: eth0
+  vmnet: vmnet99
+- name: eth1
+  vmnet: vmnet100
+disks:
+- name: sda
+  size: 32GB

@@ -1,0 +1,7 @@
+---
+- hosts: vmware_fusion_host[0]
+  gather_facts: no
+  become: yes
+  connection: local
+  roles:
+  - vmware-fusion/vmnet/create

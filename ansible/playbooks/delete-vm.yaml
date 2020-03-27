@@ -1,0 +1,9 @@
+---
+- hosts: '{{ target }}'
+  become: no
+  gather_facts: no
+  roles:
+  - role: vmware-fusion/vmx/power-off
+    delegate_to: '{{ groups.vmware_fusion_host[0] }}'
+  - role: vmware-fusion/vmx/delete
+    delegate_to: '{{ groups.vmware_fusion_host[0] }}'

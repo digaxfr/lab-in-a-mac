@@ -1,0 +1,36 @@
+# dhcpd.conf
+# Ansible managed
+
+option domain-name "{{ domain_name }}";
+default-lease-time 600;
+max-lease-time 7200;
+ddns-update-style none;
+authoritative;
+log-facility local7;
+
+# Subnets
+# We only want subnets that have 'dhcp: no' because 'dhcp: yes' means VMware handles dhcp for that subnet.
+{% for net_k, net_v in vmware_fusion_vmnets.items() %}
+{% if net_v['dhcp'] == 'no' %}
+subnet {{ net_v['hostonly_subnet'] }} netmask {{ net_v['hostonly_netmask'] }} {
+  option routers {{ net_v['cidr'] | ipaddr(1) | ipaddr('address') }};
+  option domain-name-servers {{ hostvars[groups.dns_masters[0]].ansible_default_ipv4.address }};
+}
+{% endif %}
+{% endfor %}
+
+# Static hosts
+{% for host in groups.all %}
+{% if host not in groups.all_routers %}
+{% if hostvars[host].nics is defined %}
+{% for nic in hostvars[host].nics %}
+{% if nic.ipv4_address is defined %}
+host {{ host }}-{{ nic.name }} {
+  hardware ethernet {{ mac_oui }}:{{ nic.ipv4_address | ip4_hex(delimiter=":") }};
+  fixed-address {{ nic.ipv4_address }};
+}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endfor %}
