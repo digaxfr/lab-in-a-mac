@@ -5,6 +5,7 @@ cpus: 2
 ram: 4096
 nics:
 - name: eth0
+  method: dhcp
   vmnet: vmnet99
 disks:
 - name: sda

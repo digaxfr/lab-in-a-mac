@@ -8,8 +8,8 @@ nics:
   ipv4_address: 192.168.99.8
   ipv4_gateway: 192.168.99.1
   ipv4_netmask: 255.255.255.0
+  method: vmnet
   vmnet: vmnet99
-  vmnet_static: yes
 disks:
 - name: sda
   size: 64

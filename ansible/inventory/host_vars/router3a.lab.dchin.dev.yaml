@@ -8,11 +8,12 @@ nics:
   ipv4_address: 192.168.100.13
   ipv4_gateway: 192.168.100.2
   ipv4_netmask: 255.255.255.0
+  method: vmnet
   vmnet: vmnet100
-  vmnet_static: yes
 - name: eth1
   ipv4_address: 192.168.103.1
   ipv4_netmask: 255.255.255.0
+  method: os
   vmnet: vmnet103
 disks:
 - name: sda
