@@ -1,55 +1,47 @@
+# All hosts that have special needs will get defined in the ungrouped section first.
+localhost               ansible_python_interpreter=/usr/bin/python3
+router0a.lab.dchin.dev  ansible_host=192.168.100.10
+
 [vmware_fusion_host]
-localhost   ansible_python_interpreter=/usr/bin/python3
+localhost
 
 [fusion_machines]
-router0a.lab.dchin.dev
-router1a.lab.dchin.dev
-router2a.lab.dchin.dev
-router3a.lab.dchin.dev
-router4a.lab.dchin.dev
-etcd1a.lab.dchin.dev
-etcd2a.lab.dchin.dev
-etcd3a.lab.dchin.dev
 esxi1a.lab.dchin.dev
 esxi2a.lab.dchin.dev
 esxi3a.lab.dchin.dev
-macfail-fedora.lab.dchin.dev
+etcd1a.lab.dchin.dev
+etcd2a.lab.dchin.dev
+etcd3a.lab.dchin.dev
 macfail-fedora-template.lab.dchin.dev
-
-[fusion_ova]
-vcsa1a.lab.dchin.dev
-
-[sandboxes]
-macfail-linux.lab.dchin.dev
 macfail-fedora.lab.dchin.dev
-macfail-fedora-template.lab.dchin.dev
-
-[all_routers]
 router0a.lab.dchin.dev
 router1a.lab.dchin.dev
 router2a.lab.dchin.dev
 router3a.lab.dchin.dev
 router4a.lab.dchin.dev
 
+[sandboxes]
+macfail-fedora.lab.dchin.dev
+macfail-fedora-template.lab.dchin.dev
+
+[all_routers:children]
+core_router
+rack_routers
+
 [core_router]
-router0a.lab.dchin.dev  ansible_host=192.168.100.10
+router0a.lab.dchin.dev
 
 [rack_routers]
 router1a.lab.dchin.dev
 router2a.lab.dchin.dev
 router3a.lab.dchin.dev
-router4a.lab.dchin.dev
 
-[dns_masters:children]
-core_router
-
-[rack_core]
+[dns_primary]
 router0a.lab.dchin.dev
 
 [rack_99:children]
 sandboxes
 
-# Note: cheap hack by putting the other routers here in rack_100 gets me past my DNS templating problem.
 [rack_100]
 router0a.lab.dchin.dev
 router1a.lab.dchin.dev
@@ -57,28 +49,18 @@ router2a.lab.dchin.dev
 router3a.lab.dchin.dev
 
 [rack_101]
-router1a.lab.dchin.dev
+#router1a.lab.dchin.dev
 etcd1a.lab.dchin.dev
 
 [rack_102]
-router1a.lab.dchin.dev
+#router1a.lab.dchin.dev
 etcd2a.lab.dchin.dev
 
 [rack_103]
-router3a.lab.dchin.dev
+#router3a.lab.dchin.dev
 etcd3a.lab.dchin.dev
-
-[rack_104]
-router4a.lab.dchin.dev
-esxi1a.lab.dchin.dev
-esxi2a.lab.dchin.dev
-esxi3a.lab.dchin.dev
-vcsa1a.lab.dchin.dev
 
 [esxi]
 esxi1a.lab.dchin.dev
 esxi2a.lab.dchin.dev
 esxi3a.lab.dchin.dev
-
-[esxi_tools:children]
-core_router

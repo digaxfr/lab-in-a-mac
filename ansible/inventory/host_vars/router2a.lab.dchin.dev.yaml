@@ -5,17 +5,17 @@ cpus: 1
 ram: 1024
 nics:
 - name: eth0
-  cloud_init_static: yes
   ipv4_address: 192.168.100.12
   ipv4_gateway: 192.168.100.2
   ipv4_netmask: 255.255.255.0
   vmnet: vmnet100
+  vmnet_static: yes
 - name: eth1
   ipv4_address: 192.168.102.1
   ipv4_netmask: 255.255.255.0
   vmnet: vmnet102
 disks:
 - name: sda
-  size: 32GB
+  size: 8
 
 bgp_asn: 65002
