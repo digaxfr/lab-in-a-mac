@@ -1,0 +1,30 @@
+---
+# nmcli module does not work because the package requirements do not exist in later versions of Fedora and RHEL.
+# https://github.com/ansible/ansible/issues/48055
+# https://github.com/ansible/ansible/pull/65726
+# Supposedly it is fixed? Who knows, I'll just do it manually (again).
+
+- name: network-interfaces-static/fedora | check to see if the connection exists already
+  command: >
+    nmcli connection show {{ item.name }}
+  ignore_errors: yes
+  register: _nmcli_connections
+  with_items: '{{ nics }}'
+  when: 'item.method == "os"'
+
+- name: network-interfaces-static/fedora | create the connection
+  command: >
+    nmcli connection add \
+    type ethernet \
+    connection.id {{ item.item.name }} \
+    connection.interface-name {{ item.item.name }} \
+    ipv4.address {{ (item.item.ipv4_address + "/" + item.item.ipv4_netmask) | ipaddr("host/prefix") }} \
+    {% if item.item.ipv4_gateway is defined %}
+    ipv4.gateway {{ item.item.ipv4_gateway }} \
+    {% endif %}
+    ipv4.method manual
+  with_items: '{{ _nmcli_connections.results }}'
+  when:
+  - 'item.rc is defined'
+  - 'item.rc != 0'
+  - 'item.item.method == "os"'

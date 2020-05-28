@@ -1,27 +1,8 @@
 ---
-- name: network-interfaces-static | template out interface file
-  template:
-    src: interfaces.j2
-    dest: /etc/network/interfaces
-    owner: root
-    group: root
-  notify: restart networking
+- name: network-interfaces-static | Debian
+  include: debian.yaml
+  when: 'ansible_distribution == "Debian"'
 
-- name: network-interfaces-static | template out resolv.conf
-  template:
-    src: resolv.conf.j2
-    dest: /etc/resolv.conf
-    owner: root
-    group: root
-
-- name: network-interfaces-static | ensure resolvconf is disabled
-  systemd:
-    name: systemd-resolved
-    enabled: no
-    state: stopped
-
-- name: network-interfaces-static | flush handlers
-  meta: flush_handlers
-
-- name: network-interfaces-static | force gather facts
-  setup:
+- name: network-interfaces-static | Fedora
+  include: fedora.yaml
+  when: 'ansible_distribution == "Fedora"'
