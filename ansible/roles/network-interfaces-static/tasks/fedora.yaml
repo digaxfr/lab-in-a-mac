@@ -24,7 +24,12 @@
     {% endif %}
     ipv4.method manual
   with_items: '{{ _nmcli_connections.results }}'
+  register: _nmcli_connection_added
   when:
   - 'item.rc is defined'
   - 'item.rc != 0'
   - 'item.item.method == "os"'
+
+- name: network-interfaces-static/fedora | force a fact refresh
+  setup:
+  when: '_nmcli_connection_added is changed'
