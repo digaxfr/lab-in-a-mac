@@ -1,14 +1,18 @@
 ---
 - name: bird2 | install bird
-  apt:
-    name: bird2
+  yum:
+    name: bird
     state: present
+
+- name: bird2 | gather facts if necessary
+  setup:
+  when: 'ansible_eth1.ipv4 is not defined'
 
 - name: bird2 | template bird conf
   template:
     src: bird.conf.j2
-    dest: /etc/bird/bird.conf
-    owner: bird
+    dest: /etc/bird.conf
+    owner: root
     group: bird
     mode: 0640
   notify: restart bird2

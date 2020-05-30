@@ -20,7 +20,12 @@ protocol device {
 }
 
 protocol direct {
+{% if 'core_router' in hostvars[inventory_hostname].group_names %}
+    disabled;
+{% endif %}
+{% if 'rack_routers' in hostvars[inventory_hostname].group_names %}
     ipv4;
+{% endif %}
 }
 
 protocol kernel {
