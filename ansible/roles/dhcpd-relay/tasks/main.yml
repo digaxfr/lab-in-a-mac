@@ -1,23 +1,24 @@
 ---
 - name: dhcpd-relay | install the relay server
-  apt:
-    name: isc-dhcp-relay
+  yum:
+    name: dhcp-relay
     state: present
 
-- name: dhcpd-relay | configure the relay configuration file
-  lineinfile:
-    path: /etc/default/isc-dhcp-relay
-    regexp: '{{ item.regexp }}'
-    line: '{{ item.line }}'
-  with_items:
-  - regexp: '^SERVERS='
-    line: 'SERVERS="{{ hostvars[groups.core_router[0]].ansible_default_ipv4.address }}"'
-  - regexp: '^INTERFACES='
-    line: 'INTERFACES=""'
-  notify: restart isc-dhcp-relay
+- name: dhcpd-relay | template out systemd unit file
+  template:
+    src: dhcrelay.service.j2
+    dest: /etc/systemd/system/dhcrelay.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart dhcrelay
 
 - name: dhcpd-relay | systemd
   systemd:
-    name: isc-dhcp-relay
+    name: dhcrelay
     state: started
     enabled: yes
+    daemon_reload: yes
+
+- name: dhcpd-relay | flush handlers
+  meta: flush_handlers

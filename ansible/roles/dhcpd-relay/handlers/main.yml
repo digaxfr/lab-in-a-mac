@@ -1,6 +1,6 @@
 ---
-- name: restart isc-dhcp-relay
+- name: restart dhcrelay
   systemd:
-    name: isc-dhcp-relay
+    name: dhcrelay
     state: restarted
     enabled: yes
