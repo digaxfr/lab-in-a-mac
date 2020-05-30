@@ -14,4 +14,4 @@
     path: /etc/hosts
     regexp: '{{ nics[0].ipv4_address }} '
     line: '{{ nics[0].ipv4_address }} {{ inventory_hostname }} {{ inventory_hostname_short }}'
-  when: 'nics[0].method == "static"'
+  when: 'nics[0].method == "vmnet"'
