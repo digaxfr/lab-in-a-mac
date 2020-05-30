@@ -1,0 +1,30 @@
+*nat
+:PREROUTING ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+{% for vmnet_k, vmnet_v in vmware_fusion_vmnets.items() %}
+-A POSTROUTING -s {{ (vmnet_v.hostonly_subnet + '/' + vmnet_v.hostonly_netmask) | ipaddr('net') }} -j ACCEPT
+{% endfor %}
+-A POSTROUTING -o eth0 -j MASQUERADE
+COMMIT
+
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
+{% if inventory_hostname in groups.core_router %}
+-A INPUT -p udp --dport 53 -j ACCEPT
+-A INPUT -p tcp --dport 53 -j ACCEPT
+-A INPUT -p udp --dport 67 -j ACCEPT
+{% endif %}
+{% if inventory_hostname in groups.all_routers %}
+-A INPUT -p tcp --dport 179 -j ACCEPT
+{% endif %}
+-A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
+{% for vmnet_k, vmnet_v in vmware_fusion_vmnets.items() %}
+-A FORWARD -s {{ (vmnet_v.hostonly_subnet + '/' + vmnet_v.hostonly_netmask) | ipaddr('net') }} -j ACCEPT
+{% endfor %}
+COMMIT

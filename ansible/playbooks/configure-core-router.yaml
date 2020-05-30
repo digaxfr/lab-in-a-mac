@@ -5,7 +5,9 @@
   roles:
   - role: network-interfaces-static
     tags: network
-  - role: nftables
+#  - role: nftables
+#    tags: firewall
+  - role: iptables
     tags: firewall
   - role: bind9-masters
     tags: dns

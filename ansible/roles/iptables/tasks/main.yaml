@@ -1,0 +1,21 @@
+---
+- name: iptables | install packages
+  yum:
+    name:
+    - iptables-nft
+    - iptables-services
+
+- name: iptables | template out iptables config
+  template:
+    src: iptables.j2
+    dest: /etc/sysconfig/iptables
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart iptables
+
+- name: iptables | systemd
+  systemd:
+    name: iptables
+    state: started
+    enabled: yes
