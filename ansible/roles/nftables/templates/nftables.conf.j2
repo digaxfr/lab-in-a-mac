@@ -6,7 +6,7 @@ flush ruleset
 
 define fusion_subnets = {
 {% for vmnet_k, vmnet_v in vmware_fusion_vmnets.items() %}
-    {{ vmnet_v.cidr }},
+    {{ (vmnet_v.hostonly_subnet + '/' + vmnet_v.hostonly_netmask) | ipaddr('net') }},
 {% endfor %}
 }
 
@@ -16,7 +16,7 @@ table ip filter {
     ct state established,related accept
     iifname "lo" accept
     counter icmp type echo-request accept
-    counter tcp dport 22 ip saddr {{ vmware_fusion_vmnets.100.cidr }} accept
+    counter tcp dport 22 ip saddr $fusion_subnets accept
 {% if inventory_hostname in groups.core_router %}
     counter udp dport 53 accept
     counter tcp dport 53 accept
