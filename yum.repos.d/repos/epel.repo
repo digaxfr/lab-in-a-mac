@@ -1,0 +1,4 @@
+[epel]
+name=epel
+enabled=1
+baseurl=http://192.168.99.1:8000/epel/8/Everything/x86_64

@@ -1,5 +1,7 @@
 *.swp
-~.
-ansible.log
 .DS_Store
+ansible.log
+yum.repos.d/centos
+yum.repos.d/epel
 yum.repos.d/fedora
+~.
