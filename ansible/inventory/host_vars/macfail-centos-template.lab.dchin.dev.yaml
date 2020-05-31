@@ -1,0 +1,15 @@
+---
+vm_type: template
+
+cpus: 2
+ram: 4096
+nics:
+- name: eth0
+  ipv4_address: 192.168.99.10
+  ipv4_gateway: 192.168.99.2
+  ipv4_netmask: 255.255.255.0
+  method: vmnet
+  vmnet: vmnet99
+disks:
+- name: sda
+  size: 4

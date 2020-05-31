@@ -5,4 +5,4 @@
 
 - name: network-interfaces-static | Fedora
   include: fedora.yaml
-  when: 'ansible_distribution == "Fedora"'
+  when: 'ansible_distribution == "Fedora" or ansible_distribution == "CentOS"'

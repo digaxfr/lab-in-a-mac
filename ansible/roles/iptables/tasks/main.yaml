@@ -2,7 +2,7 @@
 - name: iptables | install packages
   yum:
     name:
-    - iptables-nft
+    - iptables
     - iptables-services
 
 - name: iptables | template out iptables config
