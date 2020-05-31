@@ -2,7 +2,7 @@
 :PREROUTING ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
 {% for vmnet_k, vmnet_v in vmware_fusion_vmnets.items() %}
--A POSTROUTING -s {{ (vmnet_v.hostonly_subnet + '/' + vmnet_v.hostonly_netmask) | ipaddr('net') }} -j ACCEPT
+-A POSTROUTING -d {{ (vmnet_v.hostonly_subnet + '/' + vmnet_v.hostonly_netmask) | ipaddr('net') }} -j ACCEPT
 {% endfor %}
 -A POSTROUTING -o eth0 -j MASQUERADE
 COMMIT
