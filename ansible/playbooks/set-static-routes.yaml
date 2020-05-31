@@ -12,14 +12,14 @@
   tasks:
   - name: set-static-routes | check if route exists
     shell: >
-      route -n get {{ item.value.cidr }} | grep gateway
+      route -n get {{ (item.value.hostonly_subnet + '/' + item.value.hostonly_netmask) | ipaddr('net') }} | grep gateway
     with_dict: '{{ vmware_fusion_vmnets }}'
     when: item.value.virtual_adapter == 'no'
     register: _routes
 
   - name: set-static-routes | set static routes if needed
     command: >
-      route add -net {{ item.item.value.cidr }} {{ hostvars[groups.core_router[0]].ansible_default_ipv4.address }}
+      route add -net {{ (item.item.value.hostonly_subnet + '/' + item.item.value.hostonly_netmask) | ipaddr('net') }} {{ hostvars[groups.core_router[0]].ansible_default_ipv4.address }}
     with_items: '{{ _routes.results }}'
     when:
     - item.changed is true
