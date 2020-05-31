@@ -5,10 +5,24 @@
   register: _vmx_stat
 
 # vmrun start on an already powered on VM is idempotent
-- name: vmware-fusion/vmx/power-on | start the vm
-  command: >
-    /Applications/VMware\ Fusion.app/Contents/Public/vmrun
-    start
-    '{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/vm.vmx'
-    nogui
-  when: _vmx_stat.stat.exists
+- block:
+  - name: vmware-fusion/vmx/power-on | start the vm
+    command: >
+      /Applications/VMware\ Fusion.app/Contents/Public/vmrun
+      start
+      '{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/vm.vmx'
+      nogui
+    when: _vmx_stat.stat.exists
+
+  rescue:
+  - name: vmware-fusion/vmx/power-on | pause to let things settle
+    pause:
+      seconds: 2
+
+  - name: vmware-fusion/vmx/power-on | start the vm (again)
+    command: >
+      /Applications/VMware\ Fusion.app/Contents/Public/vmrun
+      start
+      '{{ vmware_fusion_vm_dir }}/{{ inventory_hostname }}.vmwarevm/vm.vmx'
+      nogui
+    when: _vmx_stat.stat.exists
