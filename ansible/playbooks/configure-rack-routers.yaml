@@ -12,7 +12,7 @@
   roles:
   - role: network-interfaces-static
     tags: network
-  - role: nftables
+  - role: iptables
     tags: firewall
   - role: bird2
     tags: bgp

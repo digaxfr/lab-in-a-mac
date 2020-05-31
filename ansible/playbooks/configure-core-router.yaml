@@ -8,8 +8,8 @@
   - role: iptables
     tags: firewall
   - role: dnsmasq
-    tags: dns
+    tags:
+    - dns
+    - dhcp
   - role: bird2
     tags: bgp
-  - role: dhcpd
-    tags: dhcpd
