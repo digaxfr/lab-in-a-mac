@@ -19,3 +19,6 @@
     name: iptables
     state: started
     enabled: yes
+
+- name: iptables | flush handlers
+  meta: flush_handlers
