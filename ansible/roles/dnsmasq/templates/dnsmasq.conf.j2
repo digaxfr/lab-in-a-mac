@@ -681,14 +681,29 @@ domain={{ domain_name }}
 # Include all files in /etc/dnsmasq.d except RPM backup files
 conf-dir=/etc/dnsmasq.d,.rpmnew,.rpmsave,.rpmorig
 
-# Add our records
+# Add our records.
 {% for host in groups.all %}
 {% if hostvars[host].nics is defined and hostvars[host].nics[0].ipv4_address is defined %}
 host-record={{ host }},{{ hostvars[host].nics[0].ipv4_address }}
 {% endif %}
 {% endfor %}
 
-# Add our upstream servers
+# Add our upstream servers.
 {% for server in upstream_dns_servers %}
 server={{ server }}
+{% endfor %}
+
+# DHCP ranges configured as static only.
+{% for vmnet_k, vmnet_v in vmware_fusion_vmnets.items() %}
+{% if vmnet_v.dhcp == 'no' %}
+dhcp-range={{ vmnet_v.hostonly_subnet }},static,{{ vmnet_v.hostonly_netmask }}
+{% endif %}
+{% endfor %}
+
+# DHCP host records for 'method: dhcp' only.
+# Only eth0 is accounted for.
+{% for host in groups.all %}
+{% if hostvars[host].nics is defined and hostvars[host].nics[0].method == 'dhcp' %}
+dhcp-host={{ mac_oui }}:{{ hostvars[host].nics[0].ipv4_address | ip4_hex(":") }},,,,{{ hostvars[host].nics[0].ipv4_address }},{{ host }},infinite
+{% endif %}
 {% endfor %}
