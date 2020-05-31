@@ -36,9 +36,6 @@ router1a.lab.dchin.dev
 router2a.lab.dchin.dev
 router3a.lab.dchin.dev
 
-[dns_primary]
-router0a.lab.dchin.dev
-
 [rack_99:children]
 sandboxes
 
@@ -49,18 +46,10 @@ router2a.lab.dchin.dev
 router3a.lab.dchin.dev
 
 [rack_101]
-#router1a.lab.dchin.dev
 etcd1a.lab.dchin.dev
 
 [rack_102]
-#router1a.lab.dchin.dev
 etcd2a.lab.dchin.dev
 
 [rack_103]
-#router3a.lab.dchin.dev
 etcd3a.lab.dchin.dev
-
-[esxi]
-esxi1a.lab.dchin.dev
-esxi2a.lab.dchin.dev
-esxi3a.lab.dchin.dev
