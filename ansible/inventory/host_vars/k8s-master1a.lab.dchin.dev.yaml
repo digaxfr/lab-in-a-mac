@@ -1,0 +1,15 @@
+---
+vm_type: vm
+
+cpus: 2
+ram: 2048
+nics:
+- name: eth0
+  ipv4_address: 192.168.101.22
+  ipv4_gateway: 192.168.101.1
+  ipv4_netmask: 255.255.255.0
+  method: dhcp
+  vmnet: vmnet101
+disks:
+- name: sda
+  size: 16

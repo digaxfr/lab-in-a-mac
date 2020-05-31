@@ -6,19 +6,24 @@ router0a.lab.dchin.dev  ansible_host=192.168.100.10
 localhost
 
 [fusion_machines]
-esxi1a.lab.dchin.dev
-esxi2a.lab.dchin.dev
-esxi3a.lab.dchin.dev
-etcd1a.lab.dchin.dev
-etcd2a.lab.dchin.dev
-etcd3a.lab.dchin.dev
+k8s-etcd1a.lab.dchin.dev
+k8s-etcd2a.lab.dchin.dev
+k8s-etcd3a.lab.dchin.dev
+k8s-ingress1a.lab.dchin.dev
+k8s-ingress2a.lab.dchin.dev
+k8s-ingress3a.lab.dchin.dev
+k8s-master1a.lab.dchin.dev
+k8s-master2a.lab.dchin.dev
+k8s-master3a.lab.dchin.dev
+k8s-node1a.lab.dchin.dev
+k8s-node2a.lab.dchin.dev
+k8s-node3a.lab.dchin.dev
 macfail-fedora-template.lab.dchin.dev
 macfail-fedora.lab.dchin.dev
 router0a.lab.dchin.dev
 router1a.lab.dchin.dev
 router2a.lab.dchin.dev
 router3a.lab.dchin.dev
-router4a.lab.dchin.dev
 
 [sandboxes]
 macfail-fedora.lab.dchin.dev
