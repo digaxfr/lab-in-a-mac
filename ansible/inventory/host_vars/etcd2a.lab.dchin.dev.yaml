@@ -8,7 +8,8 @@ nics:
   ipv4_address: 192.168.102.20
   ipv4_gateway: 192.168.102.1
   ipv4_netmask: 255.255.255.0
+  method: dhcp
   vmnet: vmnet102
 disks:
 - name: sda
-  size: 32GB
+  size: 16
