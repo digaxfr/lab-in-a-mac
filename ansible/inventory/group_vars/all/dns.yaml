@@ -1,0 +1,20 @@
+---
+# Additional DNS records go here.
+
+dns_a_records:
+- ip: '{{ hostvars["k8s-master1a.lab.dchin.dev"].nics[0].ipv4_address }}'
+  record: k8s-apia.lab.dchin.dev
+- ip: '{{ hostvars["k8s-master2a.lab.dchin.dev"].nics[0].ipv4_address }}'
+  record: k8s-apia.lab.dchin.dev
+- ip: '{{ hostvars["k8s-master3a.lab.dchin.dev"].nics[0].ipv4_address }}'
+  record: k8s-apia.lab.dchin.dev
+- ip: '{{ hostvars["k8s-ingress1a.lab.dchin.dev"].nics[0].ipv4_address }}'
+  record: k8s-ingressa.lab.dchin.dev
+- ip: '{{ hostvars["k8s-ingress2a.lab.dchin.dev"].nics[0].ipv4_address }}'
+  record: k8s-ingressa.lab.dchin.dev
+- ip: '{{ hostvars["k8s-ingress3a.lab.dchin.dev"].nics[0].ipv4_address }}'
+  record: k8s-ingressa.lab.dchin.dev
+
+dns_cname_records:
+- a: k8s-ingressa.lab.dchin.dev
+  cname: '*.k8s-ingressa.lab.dchin.dev'

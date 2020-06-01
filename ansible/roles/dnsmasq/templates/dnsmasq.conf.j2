@@ -681,11 +681,23 @@ domain={{ domain_name }}
 # Include all files in /etc/dnsmasq.d except RPM backup files
 conf-dir=/etc/dnsmasq.d,.rpmnew,.rpmsave,.rpmorig
 
-# Add our records.
+# We reqire to be an authoritative server for cnames to work.
+auth-server={{ inventory_hostname }},{{ nics[0].name }}
+auth-zone={{ domain_name }},{% for vmnet_k, vmnet_v in vmware_fusion_vmnets.items() %}{{ (vmnet_v.hostonly_subnet + '/' +vmnet_v.hostonly_netmask) | ipaddr('net') }}{% if not loop.last %},{% endif %}{% endfor %}
+
+# Add our host records.
 {% for host in groups.all %}
 {% if hostvars[host].nics is defined and hostvars[host].nics[0].ipv4_address is defined %}
 host-record={{ host }},{{ hostvars[host].nics[0].ipv4_address }}
 {% endif %}
+{% endfor %}
+
+# Add additional records.
+{% for record in dns_a_records %}
+host-record={{ record.record }},{{ record.ip }}
+{% endfor %}
+{% for record in dns_cname_records %}
+cname={{ record.cname }},{{ record.a }}
 {% endfor %}
 
 # Add our upstream servers.
