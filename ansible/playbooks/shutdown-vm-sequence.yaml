@@ -1,0 +1,36 @@
+---
+- hosts: 'fusion_machines:!all_routers:!sandboxes'
+  become: yes
+  gather_facts: no
+  ignore_errors: yes
+  ignore_unreachable: yes
+  tasks:
+  - name: shutdown-vm | shutdown
+    shell: >
+      sleep 2 && /usr/sbin/shutdown -h now
+    async: 1
+    poll: 0
+
+- hosts: 'rack_routers'
+  become: yes
+  gather_facts: no
+  ignore_errors: yes
+  ignore_unreachable: yes
+  tasks:
+  - name: shutdown-vm | shutdown
+    shell: >
+      sleep 2 && /usr/sbin/shutdown -h now
+    async: 1
+    poll: 0
+
+- hosts: 'core_router'
+  become: yes
+  gather_facts: no
+  ignore_errors: yes
+  ignore_unreachable: yes
+  tasks:
+  - name: shutdown-vm | shutdown
+    shell: >
+      sleep 2 && /usr/sbin/shutdown -h now
+    async: 1
+    poll: 0
