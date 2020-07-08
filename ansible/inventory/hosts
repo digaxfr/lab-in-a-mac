@@ -19,7 +19,7 @@ k8s-node1a.lab.dchin.dev
 k8s-node2a.lab.dchin.dev
 k8s-node3a.lab.dchin.dev
 macfail-centos-template.lab.dchin.dev
-macfail-centos.lab.dchin.dev
+macfail-fedoras.lab.dchin.dev
 router0a.lab.dchin.dev
 router1a.lab.dchin.dev
 router2a.lab.dchin.dev
@@ -27,7 +27,7 @@ router3a.lab.dchin.dev
 
 [sandboxes]
 macfail-centos-template.lab.dchin.dev
-macfail-centos.lab.dchin.dev
+macfail-fedora.lab.dchin.dev
 
 [all_routers:children]
 core_router
