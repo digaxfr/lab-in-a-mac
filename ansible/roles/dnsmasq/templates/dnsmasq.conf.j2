@@ -682,7 +682,7 @@ domain={{ domain_name }}
 conf-dir=/etc/dnsmasq.d,.rpmnew,.rpmsave,.rpmorig
 
 # We reqire to be an authoritative server for cnames to work.
-auth-server={{ inventory_hostname }},{{ nics[0].name }}
+auth-server={{ domain_name }},{{ nics[0].name }}
 auth-zone={{ domain_name }},{% for vmnet_k, vmnet_v in vmware_fusion_vmnets.items() %}{{ (vmnet_v.hostonly_subnet + '/' +vmnet_v.hostonly_netmask) | ipaddr('net') }}{% if not loop.last %},{% endif %}{% endfor %}
 
 # Add our host records.
@@ -712,6 +712,9 @@ dhcp-range={{ vmnet_v.hostonly_subnet }},static,{{ vmnet_v.hostonly_netmask }}
 {% endif %}
 {% endfor %}
 
+# Set dhcp options
+dhcp-option=6,{{ upstream_dns_servers | join(',') }}
+
 # DHCP host records for 'method: dhcp' only.
 # Only eth0 is accounted for.
 {% for host in groups.all %}
@@ -719,3 +722,6 @@ dhcp-range={{ vmnet_v.hostonly_subnet }},static,{{ vmnet_v.hostonly_netmask }}
 dhcp-host={{ mac_oui }}:{{ hostvars[host].nics[0].ipv4_address | ip4_hex(":") }},,,,{{ hostvars[host].nics[0].ipv4_address }},{{ host }},infinite
 {% endif %}
 {% endfor %}
+
+# Log queries to help debug
+log-queries
