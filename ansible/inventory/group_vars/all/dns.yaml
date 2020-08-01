@@ -1,6 +1,5 @@
 ---
 # Additional DNS records go here.
-
 dns_a_records:
 - ip: '{{ hostvars["k8s-master1a.lab.dchin.dev"].nics[0].ipv4_address }}'
   record: k8s-apia.lab.dchin.dev

@@ -1,0 +1,44 @@
+---
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+      ansible_python_interpreter: /usr/bin/python3
+  children:
+    vmware_fusion_host:
+      hosts:
+        localhost:
+    fusion_machines:
+      hosts:
+        k8s-etcd1a.lab.dchin.dev:
+        k8s-etcd2a.lab.dchin.dev:
+        k8s-etcd3a.lab.dchin.dev:
+        k8s-ingress1a.lab.dchin.dev:
+        k8s-ingress2a.lab.dchin.dev:
+        k8s-ingress3a.lab.dchin.dev:
+        k8s-master1a.lab.dchin.dev:
+        k8s-master2a.lab.dchin.dev:
+        k8s-master3a.lab.dchin.dev:
+        k8s-node1a.lab.dchin.dev:
+        k8s-node2a.lab.dchin.dev:
+        k8s-node3a.lab.dchin.dev:
+        macfail-centos-template.lab.dchin.dev:
+        macfail-fedora.lab.dchin.dev:
+        router0a.lab.dchin.dev:
+        router1a.lab.dchin.dev:
+        router2a.lab.dchin.dev:
+        router3a.lab.dchin.dev:
+    sandboxes:
+      hosts:
+        macfail-centos-template.lab.dchin.dev:
+        macfail-fedora.lab.dchin.dev:
+    all_routers:
+      children:
+        core_router:
+        rack_routers:
+    core_router:
+      router0a.lab.dchin.dev:
+    rack_routers:
+      router1a.lab.dchin.dev:
+      router2a.lab.dchin.dev:
+      router3a.lab.dchin.dev:
