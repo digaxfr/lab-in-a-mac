@@ -37,8 +37,10 @@ all:
         core_router:
         rack_routers:
     core_router:
-      router0a.lab.dchin.dev:
+      hosts:
+        router0a.lab.dchin.dev:
     rack_routers:
-      router1a.lab.dchin.dev:
-      router2a.lab.dchin.dev:
-      router3a.lab.dchin.dev:
+      hosts:
+        router1a.lab.dchin.dev:
+        router2a.lab.dchin.dev:
+        router3a.lab.dchin.dev:
