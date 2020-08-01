@@ -1,0 +1,26 @@
+---
+- hosts: core_router
+  become: no
+  gather_facts: no
+  roles:
+  - role: vmware-fusion/vmx/power-on
+    delegate_to: '{{ groups.vmware_fusion_host[0] }}'
+  - role: wait-for-ssh
+
+- hosts: rack_routers
+  become: no
+  gather_facts: no
+  serial: 1
+  roles:
+  - role: vmware-fusion/vmx/power-on
+    delegate_to: '{{ groups.vmware_fusion_host[0] }}'
+  - role: wait-for-ssh
+
+- hosts: fusion_machines:!all_routers:!sandboxes
+  become: no
+  gather_facts: no
+  serial: 1
+  roles:
+  - role: vmware-fusion/vmx/power-on
+    delegate_to: '{{ groups.vmware_fusion_host[0] }}'
+  - role: wait-for-ssh
