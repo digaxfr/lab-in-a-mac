@@ -9,9 +9,10 @@
   setup:
   when: 'ansible_eth1.ipv4 is not defined'
   register: _bird2_force_facts
-  retries: 5
+  retries: 30
   delay: 2
   until: _bird2_force_facts.ansible_facts.ansible_eth1.ipv4 is defined
+  when: '"rack_routers" in group_names'
 
 - name: bird2 | template bird conf
   template:

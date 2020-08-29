@@ -1,5 +1,5 @@
 ---
-- hosts: '{{ target }}'
+- hosts: '{{ target }}:!localhost'
   become: no
   gather_facts: no
   serial: 1

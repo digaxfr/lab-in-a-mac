@@ -14,8 +14,8 @@ mac_oui: 1a:b0
 # Fusion VM info
 vmware_fusion_bin_dir: '/Applications/VMware Fusion.app/Contents/Library'
 vmware_fusion_vm_dir: '/Users/darrenchin/Virtual Machines.localized'
-vmware_fusion_vm_template_disk: '{{ vmware_fusion_vm_dir }}/CentOS-Stream-8-2020-05-31.vmdk'
-vmware_fusion_vm_template_iso: '{{ vmware_fusion_vm_dir }}/CentOS-Stream-8-x86_64-20200730-boot.iso'
+vmware_fusion_vm_template_disk: '{{ vmware_fusion_vm_dir }}/CentOS-Stream-8-2020-08-29.vmdk'
+vmware_fusion_vm_template_iso: '{{ vmware_fusion_vm_dir }}/CentOS-Stream-8-netboot-latest.iso'
 
 # Fusion API configs
 vmware_fusion_api_base_url: /api
