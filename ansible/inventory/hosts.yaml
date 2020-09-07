@@ -10,9 +10,9 @@ all:
         localhost:
     fusion_machines:
       hosts:
-        k8s-etcd1a.lab.dchin.dev:
-        k8s-etcd2a.lab.dchin.dev:
-        k8s-etcd3a.lab.dchin.dev:
+#        k8s-etcd1a.lab.dchin.dev:
+#        k8s-etcd2a.lab.dchin.dev:
+#        k8s-etcd3a.lab.dchin.dev:
         k8s-ingress1a.lab.dchin.dev:
         k8s-ingress2a.lab.dchin.dev:
         k8s-ingress3a.lab.dchin.dev:
