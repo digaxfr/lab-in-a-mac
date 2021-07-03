@@ -16,6 +16,8 @@
     delegate_to: '{{ groups.vmware_fusion_host[0] }}'
   - role: wait-for-ssh
 
+- import_playbook: set-static-routes.yaml
+
 - hosts: fusion_machines:!all_routers:!sandboxes
   become: no
   gather_facts: no

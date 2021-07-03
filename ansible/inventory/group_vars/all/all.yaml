@@ -74,3 +74,11 @@ vmware_fusion_vmnets:
     mtu: 9000
     nat: 'no'
     virtual_adapter: 'no'
+  104:
+    dhcp: 'yes'
+    display_name: lab rack 4
+    hostonly_netmask: 255.255.255.0
+    hostonly_subnet: 192.168.104.0
+    mtu: 9000
+    nat: 'yes'
+    virtual_adapter: 'yes'

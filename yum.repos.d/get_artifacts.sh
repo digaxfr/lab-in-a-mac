@@ -4,8 +4,7 @@
 artifacts_dir=./artifacts
 
 artifacts=(
-    https://github.com/containerd/containerd/releases/download/v1.3.4/containerd-1.3.4.linux-amd64.tar.gz
-    https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.18.0/crictl-v1.18.0-linux-amd64.tar.gz
+    https://download.docker.com/linux/static/stable/x86_64/docker-19.03.9.tgz
 )
 
 mkdir -p ${artifacts_dir}
